@@ -1,5 +1,7 @@
 # ggplot2 2.2.1.9000
 
+* Add built-in support for `viridis` and related color maps (@karawoo).
+
 * Use `rel()` to set line widths in theme defaults (@baptiste).
 
 * `geom_density` drops groups with fewer than two data points and throws a
