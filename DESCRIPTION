@@ -19,7 +19,7 @@ Imports:
     MASS,
     plyr (>= 1.7.1),
     reshape2,
-    scales (>= 0.4.1),
+    scales (>= 0.4.1.9001),
     stats,
     tibble,
     lazyeval
@@ -46,6 +46,7 @@ Suggests:
     svglite (>= 1.2.0.9001),
     viridisLite
 Remotes:
+    hadley/scales,
     hadley/svglite
 Enhances: sp
 License: GPL-2 | file LICENSE
