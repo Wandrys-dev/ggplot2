@@ -8,11 +8,6 @@ scale_colour_discrete <- scale_colour_hue
 #' @export
 #' @rdname scale_gradient
 #' @usage NULL
-scale_colour_continuous <- scale_colour_gradient
-
-#' @export
-#' @rdname scale_gradient
-#' @usage NULL
 scale_colour_datetime <- function() {
   scale_colour_continuous(trans = "time")
 }
@@ -28,11 +23,6 @@ scale_colour_date <- function() {
 #' @rdname scale_hue
 #' @usage NULL
 scale_fill_discrete <- scale_fill_hue
-
-#' @export
-#' @rdname scale_gradient
-#' @usage NULL
-scale_fill_continuous <- scale_fill_gradient
 
 #' @export
 #' @rdname scale_gradient
