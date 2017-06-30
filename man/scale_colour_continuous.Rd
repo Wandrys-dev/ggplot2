@@ -14,8 +14,12 @@ scale_fill_continuous(...,
 \arguments{
 \item{...}{Additional parameters passed on to the scale type}
 
-\item{type}{Scale type}
+\item{type}{One of "gradient" (the default) or "viridis" indicating the
+colour scale to use}
 }
 \description{
-Stuff here
+Continuous colour scales
+}
+\seealso{
+\code{\link[=scale_colour_gradient]{scale_colour_gradient()}} and \code{\link[=scale_colour_viridis_c]{scale_colour_viridis_c()}}
 }

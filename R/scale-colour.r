@@ -24,8 +24,8 @@ scale_fill_continuous <- function(...,
                                   type = pkgconfig::get_config("ggplot2::continuous_fill", "gradient")) {
   switch(
     type,
-    gradient = scale_colour_gradient(...),
-    viridis = scale_colour_viridis_c(...),
+    gradient = scale_fill_gradient(...),
+    viridis = scale_fill_viridis_c(...),
     stop("Unknown scale type", call. = FALSE)
   )
 }
