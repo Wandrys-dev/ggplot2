@@ -536,9 +536,20 @@ ggstrip <- function(text, horizontal = TRUE, theme) {
     fontfamily = element$family, fontface = element$face,
     lineheight = element$lineheight)
 
-  label <- stripGrob(text, element$hjust, element$vjust, element$angle,
-    margin = element$margin, gp = gp, debug = element$debug)
-
+  label <- titleGrob(
+    text,
+    x = element$hjust,
+    y = element$vjust,
+    hjust = element$hjust,
+    vjust = element$vjust,
+    angle = element$angle,
+    gp = gp,
+    margin = element$margin,
+    expand_x = TRUE,
+    expand_y = TRUE,
+    debug = element$debug
+  )
+  
   ggname("strip", absoluteGrob(
     gList(
       element_render(theme, "strip.background"),
