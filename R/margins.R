@@ -49,7 +49,7 @@ titleGrob2 <- function(label, x, y, hjust, vjust, angle, gp) {
     x,
     y,
     hjust = hjust,
-    vjust = vjust
+    vjust = vjust,
     rot = angle,
     gp = gp
   )
