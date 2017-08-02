@@ -486,21 +486,41 @@ build_strip <- function(label_df, labeller, theme, horizontal) {
     })
   }
 
+  text_theme <- if (horizontal) "strip.text.x" else "strip.text.y"
+  
+  element <- calc_element(text_theme, theme)
+  if (inherits(element, "element_blank"))
+    return(zeroGrob())
+  
   # Create matrix of labels
   labels <- lapply(labeller(label_df), cbind)
   labels <- do.call("cbind", labels)
 
   if (horizontal) {
+    
     grobs <- apply(
       labels,
       c(1, 2),
-      ggstrip,
-      theme = theme,
-      horizontal = horizontal
+      titleGrob2,
+      x = element$hjust,
+      y = element$vjust,
+      hjust = element$hjust,
+      vjust = element$vjust,
+      angle = element$angle
+    ) 
+    
+    heights <- vapply(
+      grobs,
+      function(x) {
+        height_cm(x$text_height)
+      },
+      numeric(1)
     )
 
-    heights <- unit(apply(grobs, 2, max_height), "cm")
+    max_height <- unit(max(heights, na.rm = TRUE), "cm")
     
+    ## I have changed up to here
+
     grobs <- apply(grobs, 1, function(strips) {
       gtable_matrix(
         "strip",
