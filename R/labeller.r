@@ -517,14 +517,12 @@ build_strip <- function(label_df, labeller, theme, horizontal) {
       numeric(1)
     )
 
-    max_height <- unit(max(heights, na.rm = TRUE), "cm")
-    
-    ## I have changed up to here
+    heights <- unit(max(heights, na.rm = TRUE), "cm")
 
-    grobs <- apply(grobs, 1, function(strips) {
+    grobs <- apply(grobs, 1, function(x) {      
       gtable_matrix(
         "strip",
-        matrix(strips, ncol = 1),
+        matrix(matrix(list(x[[1]]$text_grob)), ncol = 1),
         unit(1, "null"),
         heights,
         clip = "on"
@@ -539,21 +537,33 @@ build_strip <- function(label_df, labeller, theme, horizontal) {
     grobs_right <- apply(
       labels,
       c(1, 2),
-      ggstrip,
-      theme = theme,
-      horizontal = horizontal
+      titleGrob2,
+      x = element$hjust,
+      y = element$vjust,
+      hjust = element$hjust,
+      vjust = element$vjust,
+      angle = element$angle
     )
+
     grobs_right <- grobs_right[, rev(seq_len(ncol(grobs_right))), drop = FALSE]
+   
+    widths <- vapply(
+      grobs_right,
+      function(x) {
+        width_cm(x$text_width)
+      },
+      numeric(1)
+    )
+
+    widths <- unit(max(widths, na.rm = TRUE), "cm")
     
-    widths <- unit(apply(grobs_right, 2, max_width), "cm")
-    
-    grobs_right <- apply(grobs_right, 1, function(strips) {
+    grobs_right <- apply(grobs_right, 1, function(x) {      
       gtable_matrix(
         "strip",
-        matrix(strips, nrow = 1),
+        matrix(matrix(list(x[[1]]$text_grob)), nrow = 1),
         widths,
         unit(1, "null"),
-        clip = "on"
+        clip = "off"
       )
     })
     
@@ -562,17 +572,28 @@ build_strip <- function(label_df, labeller, theme, horizontal) {
     grobs_left <- apply(
       labels,
       c(1, 2),
-      ggstrip,
-      theme = theme,
-      horizontal = horizontal
+      titleGrob2,
+      x = element$hjust,
+      y = element$vjust,
+      hjust = element$hjust,
+      vjust = element$vjust,
+      angle = element$angle
     )
 
-    widths <- unit(apply(grobs_left, 2, max_width), "cm")
+    widths <- vapply(
+      grobs_left,
+      function(x) {
+        width_cm(x$text_width)
+      },
+      numeric(1)
+    )
 
-    grobs_left <- apply(grobs_left, 1, function(strips) {
+    widths <- unit(max(widths, na.rm = TRUE), "cm")
+
+    grobs_left <- apply(grobs_left, 1, function(x) {
       gtable_matrix(
         "strip",
-        matrix(strips, nrow = 1),
+        matrix(matrix(list(x[[1]]$text_grob)), nrow = 1),
         widths,
         unit(1, "null"),
         clip = "off"
