@@ -22,7 +22,7 @@ margin_width <- function(grob, margins) {
   grobWidth(grob) + margins[2] + margins[4]
 }
 
-titleGrob2 <- function(label, x, y, hjust, vjust, angle, gp) {
+titleGrob2 <- function(label, x, y, hjust, vjust, angle, gp = gpar()) {
   if (is.null(label)) return(zeroGrob())
 
   angle <- angle %% 360
