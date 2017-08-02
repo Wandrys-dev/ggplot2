@@ -496,6 +496,14 @@ build_strip <- function(label_df, labeller, theme, horizontal) {
   labels <- lapply(labeller(label_df), cbind)
   labels <- do.call("cbind", labels)
 
+  gp <- gpar(
+    fontsize = element$size,
+    col = element$colour,
+    fontfamily = element$family,
+    fontface = element$face,
+    lineheight = element$lineheight
+  )
+  
   if (horizontal) {
     
     grobs <- apply(
@@ -506,7 +514,8 @@ build_strip <- function(label_df, labeller, theme, horizontal) {
       y = element$vjust,
       hjust = element$hjust,
       vjust = element$vjust,
-      angle = element$angle
+      angle = element$angle,
+      gp = gp
     ) 
     
     heights <- vapply(
@@ -542,7 +551,8 @@ build_strip <- function(label_df, labeller, theme, horizontal) {
       y = element$vjust,
       hjust = element$hjust,
       vjust = element$vjust,
-      angle = element$angle
+      angle = element$angle,
+      gp = gp
     )
 
     grobs_right <- grobs_right[, rev(seq_len(ncol(grobs_right))), drop = FALSE]
@@ -577,7 +587,8 @@ build_strip <- function(label_df, labeller, theme, horizontal) {
       y = element$vjust,
       hjust = element$hjust,
       vjust = element$vjust,
-      angle = element$angle
+      angle = element$angle,
+      gp = gp
     )
 
     widths <- vapply(
@@ -608,31 +619,31 @@ build_strip <- function(label_df, labeller, theme, horizontal) {
 }
 
 # Grob for strip labels
-ggstrip <- function(text, horizontal = TRUE, theme) {
-  text_theme <- if (horizontal) "strip.text.x" else "strip.text.y"
-  if (is.list(text)) text <- text[[1]]
+## ggstrip <- function(text, horizontal = TRUE, theme) {
+##   text_theme <- if (horizontal) "strip.text.x" else "strip.text.y"
+##   if (is.list(text)) text <- text[[1]]
 
-  element <- calc_element(text_theme, theme)
-  if (inherits(element, "element_blank"))
-    return(zeroGrob())
+##   element <- calc_element(text_theme, theme)
+##   if (inherits(element, "element_blank"))
+##     return(zeroGrob())
 
-  gp <- gpar(fontsize = element$size, col = element$colour,
-    fontfamily = element$family, fontface = element$face,
-    lineheight = element$lineheight)
+##   gp <- gpar(fontsize = element$size, col = element$colour,
+##     fontfamily = element$family, fontface = element$face,
+##     lineheight = element$lineheight)
 
-  label <- stripGrob(text, element$hjust, element$vjust, element$angle,
-    margin = element$margin, gp = gp, debug = element$debug)
+##   label <- stripGrob(text, element$hjust, element$vjust, element$angle,
+##     margin = element$margin, gp = gp, debug = element$debug)
 
-  ggname("strip", absoluteGrob(
-    gList(
-      element_render(theme, "strip.background"),
-      label
-    ),
-    width = grobWidth(label),
-    height = grobHeight(label)
-  ))
+##   ggname("strip", absoluteGrob(
+##     gList(
+##       element_render(theme, "strip.background"),
+##       label
+##     ),
+##     width = grobWidth(label),
+##     height = grobHeight(label)
+##   ))
 
-}
+## }
 
 # Helper to adjust angle of switched strips
 adjust_angle <- function(angle) {
