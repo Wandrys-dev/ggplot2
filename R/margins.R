@@ -22,16 +22,8 @@ margin_width <- function(grob, margins) {
   grobWidth(grob) + margins[2] + margins[4]
 }
 
-titleGrob <- function(label, x, y, hjust, vjust, angle = 0, gp = gpar(),
-                      margin = NULL, margin_x = FALSE, margin_y = FALSE,
-                      debug = FALSE) {
-
-  if (is.null(label))
-    return(zeroGrob())
-
-  if (is.null(margin)) {
-    margin <- margin(0, 0, 0, 0)
-  }
+titleGrob2 <- function(label, x, y, hjust, vjust, angle, gp) {
+  if (is.null(label)) return(zeroGrob())
 
   angle <- angle %% 360
   if (angle == 90) {
@@ -52,8 +44,15 @@ titleGrob <- function(label, x, y, hjust, vjust, angle = 0, gp = gpar(),
   x <- x %||% unit(rep(xp, n), "npc")
   y <- y %||% unit(rep(yp, n), "npc")
 
-  text_grob <- textGrob(label, x, y, hjust = hjust, vjust = vjust,
-    rot = angle, gp = gp)
+  text_grob <- textGrob(
+    label,
+    x,
+    y,
+    hjust = hjust,
+    vjust = vjust
+    rot = angle,
+    gp = gp
+  )
 
   # The grob dimensions don't include the text descenders, so add on using
   # a little trigonometry. This is only exactly correct when vjust = 1.
@@ -61,6 +60,56 @@ titleGrob <- function(label, x, y, hjust, vjust, angle = 0, gp = gpar(),
   text_height <- unit(1, "grobheight", text_grob) + cos(angle / 180 * pi) * descent
   text_width <- unit(1, "grobwidth", text_grob) + sin(angle / 180 * pi) * descent
 
+  list(
+    text_grob = text_grob,
+    text_height = text_height,
+    text_width = text_width
+  )
+}
+
+add_margins <- function(text_grob, margin = NULL, bg_color = "grey85") {
+
+  if (is.null(margin)) {
+    margin <- margin(0, 0, 0, 0)
+  }
+  
+  widths <- unit.c(margin[4], text_width, margin[2])
+  heights <- unit.c(margin[1], text_height, margin[3])
+
+  vp <- viewport(
+    layout = grid.layout(3, 3, heights = heights, widths = widths),
+    gp = gp
+  )
+  child_vp <- viewport(layout.pos.row = 2, layout.pos.col = 2)
+
+  children <- gList(text_grob)
+  
+  gTree(
+    children = children,
+    vp = vpTree(vp, vpList(child_vp)),
+    widths = widths,
+    heights = heights,
+    cl = "titleGrob"
+  )
+}
+
+
+titleGrob <- function(label, x, y, hjust, vjust, angle = 0, gp = gpar(),
+                      margin = NULL, margin_x = FALSE, margin_y = FALSE,
+                      debug = FALSE) {
+
+  if (is.null(label))
+    return(zeroGrob())
+
+  if (is.null(margin)) {
+    margin <- margin(0, 0, 0, 0)
+  }
+
+  grob_details <- titleGrob2(label, x, y, hjust, vjust, angle)
+  text_grob <- grob_details$text_grob
+  text_height <- grob_details$text_height
+  text_width <- grob_details$text_width
+  
   if (isTRUE(debug)) {
     children <- gList(
       rectGrob(gp = gpar(fill = "cornsilk", col = NA)),
