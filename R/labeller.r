@@ -538,8 +538,8 @@ ggstrip <- function(text, horizontal = TRUE, theme) {
 
   label <- titleGrob(
     text,
-    x = element$hjust,
-    y = element$vjust,
+    x = unit(0.5, "npc"),
+    y = unit(0.5, "npc"),
     hjust = element$hjust,
     vjust = element$vjust,
     angle = element$angle,
