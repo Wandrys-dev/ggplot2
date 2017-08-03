@@ -503,22 +503,22 @@ build_strip <- function(label_df, labeller, theme, horizontal) {
     fontface = element$face,
     lineheight = element$lineheight
   )
+
+  # Create text grobs
+  grobs <- apply(
+    labels,
+    c(1, 2),
+    titleGrob2,
+    x = element$hjust,
+    y = element$vjust,
+    hjust = element$hjust,
+    vjust = element$vjust,
+    angle = element$angle,
+    gp = gp
+  )     
   
   if (horizontal) {
 
-    # Create text grobs
-    grobs <- apply(
-      labels,
-      c(1, 2),
-      titleGrob2,
-      x = element$hjust,
-      y = element$vjust,
-      hjust = element$hjust,
-      vjust = element$vjust,
-      angle = element$angle,
-      gp = gp
-    ) 
-    
     heights <- vapply(
       grobs,
       function(x) {
@@ -562,19 +562,8 @@ build_strip <- function(label_df, labeller, theme, horizontal) {
       bottom = grobs
     )
   } else {
-    grobs_right <- apply(
-      labels,
-      c(1, 2),
-      titleGrob2,
-      x = element$hjust,
-      y = element$vjust,
-      hjust = element$hjust,
-      vjust = element$vjust,
-      angle = element$angle,
-      gp = gp
-    )
 
-    grobs_right <- grobs_right[, rev(seq_len(ncol(grobs_right))), drop = FALSE]
+    grobs_right <- grobs[, rev(seq_len(ncol(grobs))), drop = FALSE]
    
     widths <- vapply(
       grobs_right,
@@ -598,17 +587,7 @@ build_strip <- function(label_df, labeller, theme, horizontal) {
     
     theme$strip.text.y$angle <- adjust_angle(theme$strip.text.y$angle)
     
-    grobs_left <- apply(
-      labels,
-      c(1, 2),
-      titleGrob2,
-      x = element$hjust,
-      y = element$vjust,
-      hjust = element$hjust,
-      vjust = element$vjust,
-      angle = element$angle,
-      gp = gp
-    )
+    grobs_left <- grobs
 
     widths <- vapply(
       grobs_left,
