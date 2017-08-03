@@ -505,7 +505,8 @@ build_strip <- function(label_df, labeller, theme, horizontal) {
   )
   
   if (horizontal) {
-    
+
+    # Create text grobs
     grobs <- apply(
       labels,
       c(1, 2),
@@ -528,10 +529,28 @@ build_strip <- function(label_df, labeller, theme, horizontal) {
 
     heights <- unit(max(heights, na.rm = TRUE), "cm")
 
+    # Add margins to text grobs
+    grobs <- apply(
+      grobs,
+      c(1, 2),
+      function(x) {
+        add_margins(
+          x[[1]]$text_grob,
+          x[[1]]$text_height,
+          x[[1]]$text_width,
+          gp = gp,
+          margin = element$margin,
+          margin_x = TRUE,
+          margin_y = TRUE,
+          debug = element$debug
+        )
+      }
+    )
+
     grobs <- apply(grobs, 1, function(x) {      
       gtable_matrix(
         "strip",
-        matrix(matrix(list(x[[1]]$text_grob)), ncol = 1),
+        matrix(matrix(list(x[[1]])), ncol = 1),
         unit(1, "null"),
         heights,
         clip = "on"

@@ -67,48 +67,13 @@ titleGrob2 <- function(label, x, y, hjust, vjust, angle, gp = gpar()) {
   )
 }
 
-## add_margins <- function(text_grob, margin = NULL, bg_color = "grey85") {
-
-##   if (is.null(margin)) {
-##     margin <- margin(0, 0, 0, 0)
-##   }
-  
-##   widths <- unit.c(margin[4], text_width, margin[2])
-##   heights <- unit.c(margin[1], text_height, margin[3])
-
-##   vp <- viewport(
-##     layout = grid.layout(3, 3, heights = heights, widths = widths),
-##     gp = gp
-##   )
-##   child_vp <- viewport(layout.pos.row = 2, layout.pos.col = 2)
-
-##   children <- gList(text_grob)
-  
-##   gTree(
-##     children = children,
-##     vp = vpTree(vp, vpList(child_vp)),
-##     widths = widths,
-##     heights = heights,
-##     cl = "titleGrob"
-##   )
-## }
-
-
-add_margins <- function(label, x, y, hjust, vjust, angle = 0, gp = gpar(),
-                        margin = NULL, margin_x = FALSE, margin_y = FALSE,
-                        debug = FALSE) {
-
-  if (is.null(label))
-    return(zeroGrob())
+add_margins <- function(text_grob, text_height, text_width, margin = NULL,
+                        gp = gpar(), margin_x = FALSE, margin_y = FALSE,
+                        debug = FALSE, bg_color = "grey85") {
 
   if (is.null(margin)) {
     margin <- margin(0, 0, 0, 0)
   }
-
-  grob_details <- titleGrob2(label, x, y, hjust, vjust, angle)
-  text_grob <- grob_details$text_grob
-  text_height <- grob_details$text_height
-  text_width <- grob_details$text_width
   
   if (isTRUE(debug)) {
     children <- gList(
@@ -119,7 +84,7 @@ add_margins <- function(label, x, y, hjust, vjust, angle = 0, gp = gpar(),
   } else {
     children <- gList(text_grob)
   }
- 
+
   if (margin_x && margin_y) {
     widths <- unit.c(margin[4], text_width, margin[2])
     heights <- unit.c(margin[1], text_height, margin[3])
@@ -161,6 +126,29 @@ add_margins <- function(label, x, y, hjust, vjust, angle = 0, gp = gpar(),
     widths = widths,
     heights = heights,
     cl = "titleGrob"
+  )
+}
+
+
+titleGrob <- function(label, x, y, hjust, vjust, angle = 0, gp = gpar(),
+                        margin = NULL, margin_x = FALSE, margin_y = FALSE,
+                        debug = FALSE) {
+
+  if (is.null(label))
+    return(zeroGrob())
+
+  # Get text grob, text height, and text width
+  grob_details <- titleGrob2(label, x, y, hjust, vjust, angle, gp)
+  
+  add_margins(
+    text_grob = grob_details$text_grob,
+    text_height = grob_details$text_height,
+    text_width = grob_details$text_width,
+    gp = gp,
+    margin = margin,
+    margin_x = margin_x,
+    margin_y = margin_y,
+    debug = debug
   )
 }
 

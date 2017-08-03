@@ -216,7 +216,7 @@ element_grob.element_text <- function(element, label = "", x = NULL, y = NULL,
     fontfamily = element$family, fontface = element$face,
     lineheight = element$lineheight)
 
-  add_margins(label, x, y, hjust = hj, vjust = vj, angle = angle,
+  titleGrob(label, x, y, hjust = hj, vjust = vj, angle = angle,
     gp = utils::modifyList(element_gp, gp), margin = margin,
     margin_x = margin_x, margin_y = margin_y, debug = element$debug)
 }
