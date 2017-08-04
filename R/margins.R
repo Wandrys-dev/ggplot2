@@ -22,7 +22,9 @@ margin_width <- function(grob, margins) {
   grobWidth(grob) + margins[2] + margins[4]
 }
 
-titleGrob2 <- function(label, x, y, hjust, vjust, angle, gp = gpar()) {
+titleGrob2 <- function(label, x, y, hjust, vjust, angle, gp = gpar(),
+                       debug = FALSE) {
+  
   if (is.null(label)) return(zeroGrob())
 
   angle <- angle %% 360
@@ -60,21 +62,6 @@ titleGrob2 <- function(label, x, y, hjust, vjust, angle, gp = gpar()) {
   text_height <- unit(1, "grobheight", text_grob) + cos(angle / 180 * pi) * descent
   text_width <- unit(1, "grobwidth", text_grob) + sin(angle / 180 * pi) * descent
 
-  list(
-    text_grob = text_grob,
-    text_height = text_height,
-    text_width = text_width
-  )
-}
-
-add_margins <- function(text_grob, text_height, text_width, margin = NULL,
-                        gp = gpar(), margin_x = FALSE, margin_y = FALSE,
-                        debug = FALSE, bg_color = "grey85") {
-
-  if (is.null(margin)) {
-    margin <- margin(0, 0, 0, 0)
-  }
-  
   if (isTRUE(debug)) {
     children <- gList(
       rectGrob(gp = gpar(fill = "cornsilk", col = NA)),
@@ -83,6 +70,21 @@ add_margins <- function(text_grob, text_height, text_width, margin = NULL,
     )
   } else {
     children <- gList(text_grob)
+  }
+  
+  list(
+    text_grob = children,
+    text_height = text_height,
+    text_width = text_width
+  )
+}
+
+add_margins <- function(text_grob, text_height, text_width, margin = NULL,
+                        gp = gpar(), margin_x = FALSE, margin_y = FALSE,
+                        bg_color = "grey85") {
+
+  if (is.null(margin)) {
+    margin <- margin(0, 0, 0, 0)
   }
 
   if (margin_x && margin_y) {
@@ -112,7 +114,7 @@ add_margins <- function(text_grob, text_height, text_width, margin = NULL,
     heights <- text_height
     return(
       gTree(
-        children = children,
+        children = text_grob,
         widths = widths,
         heights = heights,
         cl = "titleGrob"
@@ -121,7 +123,7 @@ add_margins <- function(text_grob, text_height, text_width, margin = NULL,
   }
 
   gTree(
-    children = children,
+    children = text_grob,
     vp = vpTree(vp, vpList(child_vp)),
     widths = widths,
     heights = heights,
@@ -131,14 +133,14 @@ add_margins <- function(text_grob, text_height, text_width, margin = NULL,
 
 
 titleGrob <- function(label, x, y, hjust, vjust, angle = 0, gp = gpar(),
-                        margin = NULL, margin_x = FALSE, margin_y = FALSE,
-                        debug = FALSE) {
+                      margin = NULL, margin_x = FALSE, margin_y = FALSE,
+                      debug = FALSE) {
 
   if (is.null(label))
     return(zeroGrob())
 
   # Get text grob, text height, and text width
-  grob_details <- titleGrob2(label, x, y, hjust, vjust, angle, gp)
+  grob_details <- titleGrob2(label, x, y, hjust, vjust, angle, gp, debug)
   
   add_margins(
     text_grob = grob_details$text_grob,
@@ -147,8 +149,7 @@ titleGrob <- function(label, x, y, hjust, vjust, angle = 0, gp = gpar(),
     gp = gp,
     margin = margin,
     margin_x = margin_x,
-    margin_y = margin_y,
-    debug = debug
+    margin_y = margin_y
   )
 }
 

@@ -516,7 +516,8 @@ build_strip <- function(label_df, labeller, theme, horizontal) {
     hjust = element$hjust,
     vjust = element$vjust,
     angle = element$angle,
-    gp = gp
+    gp = gp,
+    debug = element$debug
   )     
   
   if (horizontal) {
@@ -575,8 +576,7 @@ ggstrip <- function(grobs, theme_element, gp, background, horizontal = TRUE) {
         gp = gp,
         margin = theme_element$margin,
         margin_x = TRUE,
-        margin_y = TRUE,
-        debug = theme_element$debug
+        margin_y = TRUE
       )
     }
   )
