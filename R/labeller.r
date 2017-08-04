@@ -547,6 +547,21 @@ build_strip <- function(label_df, labeller, theme, horizontal) {
       }
     )
 
+    ## Put text on a strip
+    grobs <- apply(
+      grobs,
+      c(1, 2),
+      function(label) {
+        absoluteGrob(
+          gList(
+            element_render(theme, "strip.background"),
+            label[[1]]
+          ),
+          width = grobWidth(label[[1]]),
+          height = grobHeight(label[[1]])
+        )
+      })
+    
     grobs <- apply(grobs, 1, function(x) {      
       gtable_matrix(
         "strip",
