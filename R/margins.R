@@ -80,8 +80,7 @@ title_spec <- function(label, x, y, hjust, vjust, angle, gp = gpar(),
 }
 
 add_margins <- function(text_grob, text_height, text_width, margin = NULL,
-                        gp = gpar(), margin_x = FALSE, margin_y = FALSE,
-                        bg_color = "grey85") {
+                        gp = gpar(), margin_x = FALSE, margin_y = FALSE) {
 
   if (is.null(margin)) {
     margin <- margin(0, 0, 0, 0)
