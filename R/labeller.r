@@ -519,16 +519,11 @@ build_strip <- function(label_df, labeller, theme, horizontal) {
   
   if (horizontal) {
 
-    heights <- vapply(
-      grobs,
-      function(x) {
-        height_cm(x$text_height)
-      },
-      numeric(1)
+    heights <- unit(
+      max(height_cm(lapply(grobs, function(x) x$text_height))),
+      "cm"
     )
-
-    heights <- unit(max(heights, na.rm = TRUE), "cm")
-
+    
     # Add margins to text grobs
     grobs <- lapply(
       grobs,
@@ -579,17 +574,11 @@ build_strip <- function(label_df, labeller, theme, horizontal) {
   } else {
 
     grobs_right <- grobs[, rev(seq_len(ncol(grobs))), drop = FALSE]
-   
-    widths <- vapply(
-      grobs_right,
-      function(x) {
-        width_cm(x$text_width)
-      },
-      numeric(1)
+    
+    widths <- unit(
+      max(width_cm(lapply(grobs_right, function(x) x$text_width))),
+      "cm"
     )
-
-    widths <- unit(max(widths, na.rm = TRUE), "cm")
-
     
     # Add margins to text grobs
     grobs_right <- lapply(
@@ -639,15 +628,10 @@ build_strip <- function(label_df, labeller, theme, horizontal) {
     
     grobs_left <- grobs
 
-    widths <- vapply(
-      grobs_left,
-      function(x) {
-        width_cm(x$text_width)
-      },
-      numeric(1)
+    widths <- unit(
+      max(width_cm(lapply(grobs_left, function(x) x$text_width))),
+      "cm"
     )
-
-    widths <- unit(max(widths, na.rm = TRUE), "cm")
 
     # Add margins to text grobs
     grobs_left <- lapply(
