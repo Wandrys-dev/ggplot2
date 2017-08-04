@@ -589,13 +589,45 @@ build_strip <- function(label_df, labeller, theme, horizontal) {
     )
 
     widths <- unit(max(widths, na.rm = TRUE), "cm")
+
+    
+    # Add margins to text grobs
+    grobs_right <- lapply(
+      grobs_right,
+      function(x) {
+        add_margins(
+          text_grob = x$text_grob,
+          text_height = x$text_height,
+          text_width = x$text_width,
+          gp = gp,
+          margin = element$margin,
+          margin_x = TRUE,
+          margin_y = TRUE,
+          debug = element$debug
+        )
+      }
+    )
+    
+    # Put text on a strip
+    grobs_right <- lapply(
+      grobs_right,
+      function(label) {
+        absoluteGrob(
+          gList(
+            element_render(theme, "strip.background"),
+            label
+          ),
+          width = grobWidth(label),
+          height = grobHeight(label)
+        )
+      })
     
     grobs_right <- lapply(
       grobs_right,
       function(x) {      
         gtable_matrix(
           "strip",
-          matrix(matrix(list(x$text_grob)), nrow = 1),
+          matrix(matrix(list(x)), nrow = 1),
           widths,
           unit(1, "null"),
           clip = "off"
@@ -617,12 +649,44 @@ build_strip <- function(label_df, labeller, theme, horizontal) {
 
     widths <- unit(max(widths, na.rm = TRUE), "cm")
 
+    # Add margins to text grobs
+    grobs_left <- lapply(
+      grobs_left,
+      function(x) {
+        add_margins(
+          text_grob = x$text_grob,
+          text_height = x$text_height,
+          text_width = x$text_width,
+          gp = gp,
+          margin = element$margin,
+          margin_x = TRUE,
+          margin_y = TRUE,
+          debug = element$debug
+        )
+      }
+    )
+
+    
+    # Put text on a strip
+    grobs_left <- lapply(
+      grobs_left,
+      function(label) {
+        absoluteGrob(
+          gList(
+            element_render(theme, "strip.background"),
+            label
+          ),
+          width = grobWidth(label),
+          height = grobHeight(label)
+        )
+      })
+    
     grobs_left <- lapply(
       grobs_left,
       function(x) {
         gtable_matrix(
           "strip",
-          matrix(matrix(list(x$text_grob)), nrow = 1),
+          matrix(matrix(list(x)), nrow = 1),
           widths,
           unit(1, "null"),
           clip = "off"
