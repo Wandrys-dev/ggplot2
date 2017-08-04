@@ -510,7 +510,7 @@ build_strip <- function(label_df, labeller, theme, horizontal) {
   grobs <- apply(
     labels,
     c(1, 2),
-    titleGrob2,
+    title_spec,
     x = element$hjust,
     y = element$vjust,
     hjust = element$hjust,
@@ -545,7 +545,7 @@ build_strip <- function(label_df, labeller, theme, horizontal) {
   }
 }
 
-# Grob for strip labels - takes the output from titleGrob2, adds margins,
+# Grob for strip labels - takes the output from title_spec, adds margins,
 # creates gList with strip background and label, and returns gtable matrix
 ggstrip <- function(grobs, theme_element, gp, background, horizontal = TRUE) {
 

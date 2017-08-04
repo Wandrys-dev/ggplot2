@@ -22,7 +22,7 @@ margin_width <- function(grob, margins) {
   grobWidth(grob) + margins[2] + margins[4]
 }
 
-titleGrob2 <- function(label, x, y, hjust, vjust, angle, gp = gpar(),
+title_spec <- function(label, x, y, hjust, vjust, angle, gp = gpar(),
                        debug = FALSE) {
   
   if (is.null(label)) return(zeroGrob())
@@ -140,7 +140,7 @@ titleGrob <- function(label, x, y, hjust, vjust, angle = 0, gp = gpar(),
     return(zeroGrob())
 
   # Get text grob, text height, and text width
-  grob_details <- titleGrob2(label, x, y, hjust, vjust, angle, gp, debug)
+  grob_details <- title_spec(label, x, y, hjust, vjust, angle, gp, debug)
   
   add_margins(
     text_grob = grob_details$text_grob,
