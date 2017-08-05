@@ -520,7 +520,13 @@ build_strip <- function(label_df, labeller, theme, horizontal) {
   
   if (horizontal) {
 
-    grobs <- ggstrip(grobs, element, gp, background, horizontal)
+    height <- unit(
+      max(height_cm(lapply(grobs, function(x) x$text_height))),
+      "cm"
+    )
+    width <- unit(1, "null")
+    
+    grobs <- ggstrip(grobs, height, width, element, gp, background, horizontal)
     
     list(
       top = grobs,
@@ -528,13 +534,19 @@ build_strip <- function(label_df, labeller, theme, horizontal) {
     )
   } else {
 
+    height <- unit(1, "null")
+    width <- unit(
+      max(width_cm(lapply(grobs, function(x) x$text_width))),
+      "cm"
+    )
+
     grobs_right <- grobs[, rev(seq_len(ncol(grobs))), drop = FALSE]
-    grobs_right <- ggstrip(grobs_right, element, gp, background, horizontal)
+    grobs_right <- ggstrip(grobs_right, height, width, element, gp, background, horizontal)
     
     theme$strip.text.y$angle <- adjust_angle(theme$strip.text.y$angle)
     
     grobs_left <- grobs
-    grobs_left <- ggstrip(grobs_left, element, gp, background, horizontal)
+    grobs_left <- ggstrip(grobs_left, height, width, element, gp, background, horizontal)
         
     list(
       left = grobs_left,
@@ -545,21 +557,12 @@ build_strip <- function(label_df, labeller, theme, horizontal) {
 
 # Grob for strip labels - takes the output from title_spec, adds margins,
 # creates gList with strip background and label, and returns gtable matrix
-ggstrip <- function(grobs, theme_element, gp, background, horizontal = TRUE) {
+ggstrip <- function(grobs, height, width, theme_element, gp, background,
+                    horizontal = TRUE) {
 
   if (horizontal) {
-    heights <- unit(
-      max(height_cm(lapply(grobs, function(x) x$text_height))),
-      "cm"
-    )
-    widths <- unit(1, "null")
     clip <- "on"
   } else {
-    heights <- unit(1, "null")
-    widths <- unit(
-      max(width_cm(lapply(grobs, function(x) x$text_width))),
-      "cm"
-    )
     clip <- "off"
   }
 
@@ -569,8 +572,8 @@ ggstrip <- function(grobs, theme_element, gp, background, horizontal = TRUE) {
     function(x) {
       add_margins(
         text_grob = x$text_grob,
-        text_height = x$text_height,
-        text_width = x$text_width,
+        text_height = height,
+        text_width = width,
         gp = gp,
         margin = theme_element$margin,
         margin_x = TRUE,
@@ -599,8 +602,8 @@ ggstrip <- function(grobs, theme_element, gp, background, horizontal = TRUE) {
       gtable_matrix(
         "strip",
         matrix(matrix(list(x))),
-        widths,
-        heights,
+        width,
+        height,
         clip = clip
       )
     })
