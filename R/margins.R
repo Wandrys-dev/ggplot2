@@ -27,34 +27,42 @@ title_spec <- function(label, x, y, hjust, vjust, angle, gp = gpar(),
   
   if (is.null(label)) return(zeroGrob())
 
-  angle <- angle %% 360
-  if (angle == 90) {
-    xp <- 1 - vjust
-    yp <- hjust
-  } else if (angle == 180) {
-    xp <- 1 - hjust
-    yp <- 1 - vjust
-  } else if (angle == 270) {
-    xp <- vjust
-    yp <- 1 - hjust
+  if (missing(x) & missing(y)) {
+    text_grob <- textGrob(label, rot = angle, gp = gp)
+
+    # Used to place debugging point
+    x <- unit(hjust, "npc")
+    y <- unit(vjust, "npc")
   } else {
-    xp <- hjust
-    yp <- vjust
+    angle <- angle %% 360
+    if (angle == 90) {
+      xp <- 1 - vjust
+      yp <- hjust
+    } else if (angle == 180) {
+      xp <- 1 - hjust
+      yp <- 1 - vjust
+    } else if (angle == 270) {
+      xp <- vjust
+      yp <- 1 - hjust
+    } else {
+      xp <- hjust
+      yp <- vjust
+    }
+
+    n <- max(length(x), length(y), 1)
+    x <- x %||% unit(rep(xp, n), "npc")
+    y <- y %||% unit(rep(yp, n), "npc")
+
+    text_grob <- textGrob(
+      label,
+      x,
+      y,
+      hjust = hjust,
+      vjust = vjust,
+      rot = angle,
+      gp = gp
+    )
   }
-
-  n <- max(length(x), length(y), 1)
-  x <- x %||% unit(rep(xp, n), "npc")
-  y <- y %||% unit(rep(yp, n), "npc")
-
-  text_grob <- textGrob(
-    label,
-    x,
-    y,
-    hjust = hjust,
-    vjust = vjust,
-    rot = angle,
-    gp = gp
-  )
 
   # The grob dimensions don't include the text descenders, so add on using
   # a little trigonometry. This is only exactly correct when vjust = 1.
@@ -80,7 +88,7 @@ title_spec <- function(label, x, y, hjust, vjust, angle, gp = gpar(),
 }
 
 add_margins <- function(text_grob, text_height, text_width, margin = NULL,
-                        gp = gpar(), margin_x = FALSE, margin_y = FALSE) {
+                        gp = gpar(), margin_x = FALSE, margin_y = FALSE, ...) {
 
   if (is.null(margin)) {
     margin <- margin(0, 0, 0, 0)
@@ -91,6 +99,7 @@ add_margins <- function(text_grob, text_height, text_width, margin = NULL,
     heights <- unit.c(margin[1], text_height, margin[3])
 
     vp <- viewport(
+      ...,
       layout = grid.layout(3, 3, heights = heights, widths = widths),
       gp = gp
     )
