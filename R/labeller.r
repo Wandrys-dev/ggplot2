@@ -503,9 +503,7 @@ build_strip <- function(label_df, labeller, theme, horizontal) {
     fontface = element$face,
     lineheight = element$lineheight
   )
-
-  background <- element_render(theme, "strip.background")
-
+  
   # Create text grobs
   grobs <- apply(
     labels,
@@ -520,7 +518,7 @@ build_strip <- function(label_df, labeller, theme, horizontal) {
   
   if (horizontal) {
 
-    grobs <- ggstrip(grobs, element, gp, background, horizontal)
+    grobs <- ggstrip(grobs, theme, element, gp, horizontal)
     
     list(
       top = grobs,
@@ -529,12 +527,12 @@ build_strip <- function(label_df, labeller, theme, horizontal) {
   } else {
 
     grobs_right <- grobs[, rev(seq_len(ncol(grobs))), drop = FALSE]
-    grobs_right <- ggstrip(grobs_right, element, gp, background, horizontal)
+    grobs_right <- ggstrip(grobs_right, theme, element, gp, horizontal)
     
     theme$strip.text.y$angle <- adjust_angle(theme$strip.text.y$angle)
     
     grobs_left <- grobs
-    grobs_left <- ggstrip(grobs_left, element, gp, background, horizontal)
+    grobs_left <- ggstrip(grobs_left, theme, element, gp, horizontal)
         
     list(
       left = grobs_left,
@@ -545,7 +543,7 @@ build_strip <- function(label_df, labeller, theme, horizontal) {
 
 # Grob for strip labels - takes the output from title_spec, adds margins,
 # creates gList with strip background and label, and returns gtable matrix
-ggstrip <- function(grobs, theme_element, gp, background, horizontal = TRUE) {
+ggstrip <- function(grobs, theme, element, gp, horizontal = TRUE) {
 
   if (horizontal) {
     heights <- unit(
@@ -572,12 +570,12 @@ ggstrip <- function(grobs, theme_element, gp, background, horizontal = TRUE) {
         text_height = x$text_height,
         text_width = x$text_width,
         gp = gp,
-        margin = theme_element$margin,
+        margin = element$margin,
         margin_x = TRUE,
         margin_y = TRUE,
-        x = theme_element$hjust,
-        y = theme_element$vjust,
-        just = c(theme_element$hjust, theme_element$vjust)
+        x = element$hjust,
+        y = element$vjust,
+        just = c(element$hjust, element$vjust)
       )
     }
   )
@@ -586,10 +584,16 @@ ggstrip <- function(grobs, theme_element, gp, background, horizontal = TRUE) {
   grobs <- lapply(
     grobs,
     function(label) {
-      absoluteGrob(
-        gList(background, label),
-        width = grobWidth(label),
-        height = grobHeight(label)
+      ggname(
+        "strip",
+        absoluteGrob(
+          gList(
+            element_render(theme, "strip.background"),
+            label
+          ),
+          width = grobWidth(label),
+          height = grobHeight(label)
+        )
       )
     })
   
