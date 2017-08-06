@@ -546,18 +546,12 @@ build_strip <- function(label_df, labeller, theme, horizontal) {
 ggstrip <- function(grobs, theme, element, gp, horizontal = TRUE) {
 
   if (horizontal) {
-    heights <- unit(
-      max(height_cm(lapply(grobs, function(x) x$text_height))),
-      "cm"
-    )
+    heights <- max_height(lapply(grobs, function(x) x$text_height))
     widths <- unit(1, "null")
     clip <- "on"
   } else {
     heights <- unit(1, "null")
-    widths <- unit(
-      max(width_cm(lapply(grobs, function(x) x$text_width))),
-      "cm"
-    )
+    widths <- max_width(lapply(grobs, function(x) x$text_width))
     clip <- "off"
   }
 
