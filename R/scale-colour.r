@@ -24,7 +24,7 @@
 #' v + scale_fill_gradient()
 #' v + scale_fill_viridis_c()
 scale_colour_continuous <- function(...,
-                                    type = getOption("ggplot2.continuous.colour", default = "gradient")) {
+                                    type = getOption("ggplot2.continuous.colour", default = "viridis")) {
   switch(
     type,
     gradient = scale_colour_gradient(...),
@@ -36,7 +36,7 @@ scale_colour_continuous <- function(...,
 #' @rdname scale_colour_continuous
 #' @export
 scale_fill_continuous <- function(...,
-                                  type = getOption("ggplot2.continuous.fill", default = "gradient")) {
+                                  type = getOption("ggplot2.continuous.fill", default = "viridis")) {
   switch(
     type,
     gradient = scale_fill_gradient(...),
